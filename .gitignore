@@ -2,3 +2,6 @@
 .settings
 .project
 *.iml
+*
+*.classpath
+*.project
