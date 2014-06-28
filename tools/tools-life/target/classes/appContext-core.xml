@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<!--Spring 扫描除controller以外的Bean -->
+	<context:component-scan base-package="org.tools">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<!-- 加载properties -->
+	<bean id="propertyConfigurer" class="org.tools.life.support.CommonPropertyConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				
+				<value>classpath*:config/jdbc.properties</value>
+                <value>classpath*:config/config.properties</value>
+                <value>classpath*:config/url.properties</value>
+
+				<!-- 生产环境 -->
+				<value>file:${CATALINA_BASE}/conf/appconf/jdbc.properties</value>
+				<value>file:${CATALINA_BASE}/conf/appconf/config.properties</value>
+				<value>file:${CATALINA_BASE}/conf/appconf/url.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<context:annotation-config />
+
+	<tx:annotation-driven />
+
+	<!-- 千米库 配置 开始 -->
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${lifedb.driverClassName}" />
+		<property name="url" value="${lifedb.url}" />
+		<property name="username" value="${lifedb.user}" />
+		<property name="password" value="${lifedb.password}" />
+		<property name="initialSize" value="${lifedb.initialSize}" />
+		<property name="maxIdle" value="${lifedb.maxIdle}" />
+		<property name="maxActive" value="${lifedb.maxActive}" />
+		<property name="minIdle" value="${lifedb.minIdle}" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:config/mybatis/mybatis-mysql.xml" />
+		<property name="mapperLocations" value="classpath:/**/*Mapper.xml" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="org.tools.life.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+    <task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+    <task:executor id="myExecutor" pool-size="5"/>
+    <task:scheduler id="myScheduler" pool-size="10"/>
+    
+</beans>
