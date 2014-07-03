@@ -1,9 +1,7 @@
-package org.tools.util;
+package org.tools.util.encrypt;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
@@ -19,16 +17,11 @@ import java.util.Map;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.bouncycastle.crypto.digests.MD5Digest;
-import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.bouncycastle.util.encoders.Hex;
 import org.bouncycastle.util.encoders.UrlBase64;
-import org.bouncycastle.util.encoders.UrlBase64Encoder;
 
 public class SecTect {
 	private static final String CHARSET = "UTF-8";

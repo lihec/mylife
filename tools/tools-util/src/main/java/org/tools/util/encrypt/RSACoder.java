@@ -1,4 +1,4 @@
-package org.tools.util;
+package org.tools.util.encrypt;
 
 import java.security.InvalidKeyException;
 import java.security.Key;

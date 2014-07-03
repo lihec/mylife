@@ -11,7 +11,7 @@ import org.bouncycastle.util.encoders.Hex;
 import org.springframework.stereotype.Service;
 import org.tools.life.service.common.SafeService;
 import org.tools.life.support.CommonConstants;
-import org.tools.util.AESCoder;
+import org.tools.util.encrypt.AESCoder;
 @Service
 public class SafeServiceImpl implements SafeService {
 
