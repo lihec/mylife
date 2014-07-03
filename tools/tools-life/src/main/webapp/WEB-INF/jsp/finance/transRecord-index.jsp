@@ -77,14 +77,14 @@
                     { "mDataProp": "addtime", "sName": "addtime"},
                     { "bSortable": false, "mDataProp": function (aData, type, val) {
                         var html = '<p">';
-                        html += '<button class="btn btn-default btn-sm" type="button" onclick="delTrands(' + aData.tid + ')"><span class="glyphicon glyphicon-trash"></span> 删除</button>';
+                        html += '<button class="btn btn-default btn-sm" type="button" onclick="delTrans(\'' + aData.tid + '\')"><span class="glyphicon glyphicon-trash"></span> 删除</button>';
                         html += '</p>';
                         return html;
                     }
                     }
                 ],
                 "aaSorting": [
-                    [5, "asc"]
+                    [6, "desc"]
                 ]
             });
         }
@@ -99,13 +99,13 @@
             parent.dialogPOP("/finance/transRecord/add", "新增流水", 540, 400);
         }
 
-        function delCard(id) {
+        function delTrans(id) {
             art.dialog({
-                content: '您确认删除该银行卡吗？',
+                content: '您确认删除这条记录吗？',
                 ok: function () {
                     ofajax({
-                        url: '/cardManage/' + id + '/remove',
-                        data: {},
+                        url: '/finance/transRecord/del',
+                        data: {tid:id},
                         success: function (json) {
                             if (json.result == 'ok') {
                                 flushPage();

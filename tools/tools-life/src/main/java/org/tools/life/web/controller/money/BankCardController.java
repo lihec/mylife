@@ -1,5 +1,6 @@
 package org.tools.life.web.controller.money;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,5 +131,21 @@ public class BankCardController extends BaseController {
 			return getFailResult(UNKNOWNEXCEPTION);
 		}
 	}
+
+
+    @RequestMapping(value = "/getCardBytype", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> remove(String type, HttpServletRequest request) {
+        try {
+            List<BankCard> cardList = bankCardService.getCardByType(type);
+            return getSuccessResult(cardList);
+        } catch (LifeExcepiton e) {
+            logger.error(e.getErrorMsg(), e);
+            return getFailResult(e.getErrorMsg());
+        } catch (Exception e) {
+            logger.error(UNKNOWNEXCEPTION, e);
+            return getFailResult(UNKNOWNEXCEPTION);
+        }
+    }
 
 }

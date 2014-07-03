@@ -103,4 +103,9 @@ public class BankCardServiceImpl implements BankCardService {
 		return financeView;
 	}
 
+    @Override
+    public List<BankCard> getCardByType(String type) {
+        return bankCardMapper.getCardByType(type);
+    }
+
 }

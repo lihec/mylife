@@ -10,10 +10,14 @@ import org.tools.life.domain.money.TransDetailsBo;
 public interface TransDetailsMapper {
 	
 	List<TransDetailsBo> getTransList(Page page);
-	
-   /* int deleteByPrimaryKey(String tid);
 
     int insert(TransDetails record);
+
+    int deleteByPrimaryKey(String tid);
+	
+   /*
+
+
 
 
 

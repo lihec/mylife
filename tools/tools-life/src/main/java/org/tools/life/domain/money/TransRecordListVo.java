@@ -9,7 +9,7 @@ public class TransRecordListVo extends PageableVO {
 	 */
 	private static final long serialVersionUID = -7631388275457472722L;
 
-	private int type;
+	private String type;
 
 	private String fromCard;
 
@@ -19,15 +19,15 @@ public class TransRecordListVo extends PageableVO {
 
 	private String endtime;
 
-	public int getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getToCard() {
+    public String getToCard() {
 		return toCard;
 	}
 

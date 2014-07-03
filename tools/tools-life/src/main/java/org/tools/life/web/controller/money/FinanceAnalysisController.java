@@ -1,7 +1,12 @@
 package org.tools.life.web.controller.money;
 
+import com.alibaba.fastjson.serializer.UUIDCodec;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.UUIDEditor;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,20 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.tools.life.domain.base.BaseListBO;
-import org.tools.life.domain.money.FinanceView;
-import org.tools.life.domain.money.PaymentType;
-import org.tools.life.domain.money.TransRecordListVo;
+import org.tools.life.domain.money.*;
 import org.tools.life.service.money.BankCardService;
 import org.tools.life.service.money.FinanceAnalysisService;
 import org.tools.life.web.base.BaseController;
 import org.tools.life.web.base.LifeExcepiton;
 import org.tools.life.web.form.base.PageableForm;
 import org.tools.life.web.form.money.TransRecordListForm;
+import org.tools.util.mail.java.DateUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/finance")
@@ -181,6 +183,7 @@ public class FinanceAnalysisController extends BaseController {
 
     @RequestMapping(value = "/transRecord/add", method = RequestMethod.GET)
     public String addTransRecordPage(Model model) {
+        model.addAttribute("currDate", DateUtil.getCurrentDay());
         return "/finance/transRecord-add-dialog";
     }
 
@@ -193,6 +196,36 @@ public class FinanceAnalysisController extends BaseController {
             Map<String, Object> dataMap = new HashMap<String, Object>();
             dataMap.put("payTypeList", payTypeList);
             return getSuccessResult(dataMap);
+        } catch (LifeExcepiton e) {
+            logger.error(e.getErrorMsg(), e);
+            return getFailResult(e.getErrorMsg());
+        } catch (Exception e) {
+            logger.error(UNKNOWNEXCEPTION, e);
+            return getFailResult(UNKNOWNEXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/transRecord/add", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> saveTransRecord(TransDetailsVo form) {
+        try {
+            financeAnalysisService.insert(form);
+            return getSuccessResult();
+        } catch (LifeExcepiton e) {
+            logger.error(e.getErrorMsg(), e);
+            return getFailResult(e.getErrorMsg());
+        } catch (Exception e) {
+            logger.error(UNKNOWNEXCEPTION, e);
+            return getFailResult(UNKNOWNEXCEPTION);
+        }
+    }
+
+    @RequestMapping(value = "/transRecord/del", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> delTransRecord(String tid) {
+        try {
+            financeAnalysisService.deleteTransDetail(tid);
+            return getSuccessResult();
         } catch (LifeExcepiton e) {
             logger.error(e.getErrorMsg(), e);
             return getFailResult(e.getErrorMsg());

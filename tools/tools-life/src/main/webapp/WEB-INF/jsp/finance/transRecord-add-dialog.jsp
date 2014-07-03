@@ -3,9 +3,11 @@
 <%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="/static/js/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-	$('ul.horizonal').on('click', 'input[type=radio]', function() {
+$(function(){
+    getCards();
+	$('ul.horizonal[data-role=ptype]').on('click', 'input[type=radio]', function() {
     	var ptype = $(this).val();
     	if(ptype=='0'||ptype=='1'){
     		//收入
@@ -14,33 +16,40 @@ $(document).ready(function(){
             $('#type_tr').show();
             getPayType(ptype);
     	}else if(ptype=='2'){
-    		//支出
+    		//转账
     		$('#toCard_tr').show();
             $('#withdrawFee_tr').hide();
             $('#type_tr').hide();
     	}else if(ptype=='3'){
-    		//转账
+    		//提现
             $('#toCard_tr').show();
             $('#withdrawFee_tr').show();
             $('#type_tr').hide();
     	}
-    	//获取交易类型
-    	if(true){
-    		return;
-    	}
-    	ofajax({
-	        url: '',
-	        data: {},
-	        success: function(json) {
-	            if(json.result=='ok'){
-	            	
-	            }else{
-	            	showMessage(json.msg,"error");
-	            }
-	        }
-	    });
     });
 });
+
+function getCards(){
+    ofajax({
+        url: "/cardManage/getCardBytype",
+        data: {},
+        success: function (json) {
+            if (json.result == 'ok') {
+                var cards = '';
+                var cardList = json.data;
+                $.each(cardList,function(index,card){
+                    var type = card.type==0?'储蓄卡':(card.type==1?'信用卡':'其他');
+                    type+='-';
+                    cards+='<option value="'+card.id+'">'+type+card.bankName+'('+card.bankNum+')</option>';
+                });
+                $('#fromCard').html(cards);
+                $('#toCard').html(cards);
+            } else {
+                showMessage("处理失败，原因是：" + json.msg, "error");
+            }
+        }
+    });
+}
 
 function getPayType(payType){
     ofajax({
@@ -72,31 +81,32 @@ function getSelectHtml(payTypeList,isChild){
 
 
 function saveTransRecord(){
-	/* if($("#addCardForm").valid()){ */
-		var postData=$('#paymentTypeForm').serializeArray();
-		var url = '';
-		<c:if test="${act=='add'}">url='/finance/pamentType/add';</c:if>
-		<c:if test="${act=='edit'}">url='/finance/pamentType/${pid}/edit';</c:if>
-		ofajax({
-	        url: url,
-	        data: postData,
-	        success: function(json) {
-	            if(json.result=='ok'){
-	            	parent.closeDialog();
-	            	parent.frames['mainFrame'].reloadzTree();
-	            }else{
-	            	showMessage(json.msg,"error");
-	            }
-	        }
-	    });
-	/* } */
+    var ptype = $('input[type=radio][name=ptype]:checked').val();
+    if(ptype==null||ptype==''){
+        showMessage('请选择收支类型',"error");
+        return;
+    }
+    $('#typeName').val($('#type >option:selected').html());
+    var postData=$('#transForm').serialize();
+    ofajax({
+        url: '/finance/transRecord/add',
+        data: postData,
+        success: function(json) {
+            if(json.result=='ok'){
+                parent.closeDialog();
+                parent.frames['mainFrame'].flushPage();
+            }else{
+                showMessage(json.msg,"error");
+            }
+        }
+    });
 }
 
 </script>
 
 <div class="pop-wrapper pop-wrapper-540">
     <form id="transForm">
-        <c:if test="${act=='edit'}"><input type="hidden" name="id" id="id" value="${id}" /></c:if>
+        <input id="typeName" name="typeName" type="hidden"/>
         <div class="block">
             <table class="form">
                 <tbody>
@@ -111,7 +121,7 @@ function saveTransRecord(){
                         </ul>
                     </td>
                 </tr>
-                <tr id="type_tr">
+                <tr id="type_tr" style="display: none">
                     <td class="label-td"><label for="">交易类型：</label></td>
                     <td>
                         <select name="type" id="type">
@@ -145,7 +155,7 @@ function saveTransRecord(){
                 <tr>
                     <td class="label-td"><label for="">时间：</label></td>
                     <td>
-                        <input type="text" id="addtime" name="addtime" placeholder="时间">
+                        <input type="text" value="${currDate}" id="addtime" name="addtime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" placeholder="时间">
                     </td>
                 </tr>
                 <tr>

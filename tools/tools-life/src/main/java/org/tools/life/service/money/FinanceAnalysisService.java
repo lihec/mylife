@@ -3,9 +3,7 @@ package org.tools.life.service.money;
 import java.util.List;
 
 import org.tools.life.domain.base.BaseListBO;
-import org.tools.life.domain.money.CardListVo;
-import org.tools.life.domain.money.PaymentType;
-import org.tools.life.domain.money.TransRecordListVo;
+import org.tools.life.domain.money.*;
 
 public interface FinanceAnalysisService {
 	
@@ -23,5 +21,9 @@ public interface FinanceAnalysisService {
 
 
     List<PaymentType> getPayTypeWithChild(String ptype);
+
+    int insert(TransDetailsVo transDetailsVo);
+
+    int deleteTransDetail(String tid);
 
 }

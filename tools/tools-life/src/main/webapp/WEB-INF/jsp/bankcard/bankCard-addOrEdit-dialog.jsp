@@ -7,12 +7,12 @@
     $(function(){
         $('#balance').blur(function(){
             if($('#fixCredit').val()!=''&&$(this).val()!=''){
-                $('#availableCredit').val($('#fixCredit').val()-$(this).val());
+                $('#availableCredit').val(decimal($('#fixCredit').val()-$(this).val(),2));
             }
         });
          $('#availableCredit').blur(function(){
             if($('#fixCredit').val()!=''&&$(this).val()!=''){
-                $('#balance').val($('#fixCredit').val()-$(this).val());
+                $('#balance').val(decimal($('#fixCredit').val()-$(this).val(),2));
             }
         });
     });
@@ -36,6 +36,12 @@ function saveCard(){
 	        }
 	    });
 	/* } */
+}
+
+function decimal(num,v)
+{
+    var vv = Math.pow(10,v);
+    return Math.round(num*vv)/vv;
 }
 
 </script>

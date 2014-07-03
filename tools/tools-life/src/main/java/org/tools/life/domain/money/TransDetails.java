@@ -4,17 +4,23 @@ import org.tools.life.domain.base.BaseInfo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
 /**
  * 交易流水
  * @author lihe
  *
  */
-public class TransDetails extends BaseInfo{
+public class TransDetails extends BaseInfo {
 
     private static final long serialVersionUID = -1539432201040047480L;
     private String tid;
 
     private Integer type;
+
+    /**
+     * 收支类型 0收入 1支出 2转账 3提现
+     */
+    private Integer toptype;
 
     private String typeName;
 
@@ -29,6 +35,11 @@ public class TransDetails extends BaseInfo{
     private BigDecimal withdrawFee;
 
     private Date addtime;
+
+    /**
+     * 备注
+     */
+    private String mark;
 
     public String getTid() {
         return tid;
@@ -54,7 +65,6 @@ public class TransDetails extends BaseInfo{
         this.typeName = typeName == null ? null : typeName.trim();
     }
 
-
     public String getToCard() {
         return toCard;
     }
@@ -79,13 +89,13 @@ public class TransDetails extends BaseInfo{
         this.addtime = (Date) addtime.clone();
     }
 
-	public String getFromCard() {
-		return fromCard;
-	}
+    public String getFromCard() {
+        return fromCard;
+    }
 
-	public void setFromCard(String fromCard) {
-		this.fromCard = fromCard;
-	}
+    public void setFromCard(String fromCard) {
+        this.fromCard = fromCard;
+    }
 
     public BigDecimal getWithdrawFee() {
         return withdrawFee;
@@ -93,5 +103,21 @@ public class TransDetails extends BaseInfo{
 
     public void setWithdrawFee(BigDecimal withdrawFee) {
         this.withdrawFee = withdrawFee;
+    }
+
+    public Integer getToptype() {
+        return toptype;
+    }
+
+    public void setToptype(Integer toptype) {
+        this.toptype = toptype;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 }

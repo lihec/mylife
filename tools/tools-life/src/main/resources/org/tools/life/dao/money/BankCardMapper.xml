@@ -114,5 +114,21 @@
 			bank_card  b
 			where b.type=1
    </select>
+
+    <!-- 获取信用卡列表 -->
+    <select id="getCardByType" parameterType="map" resultType="org.tools.life.domain.money.BankCard">
+        select
+        <include refid="cardColummn"/>
+        from bank_card  b
+        <where>
+            <if test='type=="-1"'>
+                b.type!=1
+            </if>
+            <if test='type!=null and type!="-1"'>
+                b.type=#{type}
+            </if>
+        </where>
+        order by b.type
+    </select>
    
 </mapper>
