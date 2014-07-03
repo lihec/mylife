@@ -11,7 +11,7 @@ import org.tools.life.domain.base.Page;
 import org.tools.life.domain.money.*;
 import org.tools.life.service.money.FinanceAnalysisService;
 import org.tools.life.web.base.LifeExcepiton;
-import org.tools.util.mail.java.DateUtil;
+import org.tools.util.common.DateUtil;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
