@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.jfx.dao.life.AccountDao">
+	<select id="getAccountList" resultType="com.life.jfx.pojo.account.Account">
+		SELECT id,name,type,url,aid,apwd,mark,DATE_FORMAT(addtime,'%Y-%m-%d %H:%i:%s')
+		FROM account order by addtime desc
+	</select>
+	
+	<select id="getSortedAccountList" resultType="com.life.jfx.pojo.account.Account" parameterType="java.util.Map">
+		select id,name,type,url,aid,apwd,mark,addtime from account order by ${sortName} ${sortType}
+	</select>
+	
+	<update id="updateAccount" parameterType="com.life.jfx.pojo.account.Account">
+		update account 
+		<set>
+			<if test="name != null">name=#{name},</if>
+			<if test="aid != null">aid=#{aid},</if>
+			<if test="apwd != null">apwd=#{apwd},</if>
+			<if test="url != null">url=#{url},</if>
+			<if test="type != null">type=#{type},</if>
+			<if test="mark != null">mark=#{mark}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<insert id="insertAccount" parameterType="com.life.jfx.pojo.account.Account">
+		insert into account (name,id,password,website) values (#{name},#{id},#{password},#{website})
+	</insert>
+	
+	<delete id="deleteAccountBySnum">
+		delete from account where id=#{snum}
+	</delete>
+</mapper>
