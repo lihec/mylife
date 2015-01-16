@@ -132,6 +132,14 @@ public class SecTect {
 		System.out.println("encStr="+org.bouncycastle.util.encoders.Hex.toHexString(encStr));
 		byte[] decStr = AESCoder.descrypt(encStr, key);
 		System.out.println("decStr="+new String(decStr, CHARSET));
+
+
+        String keyStr = "3b8RfV1AamJOlgjg+VW4e4RpECQamuwwbAn2P6YYags=";
+        System.out.println("明文：" + data);
+        String encrypt = AESCoder.encrypt(data, keyStr);
+        System.out.println("密文：" + encrypt);
+        String descrypt = AESCoder.descrypt(encrypt, keyStr);
+        System.out.println("解密后：" + descrypt);
 	}
 	
 	public static void testIDEA()throws Exception{
@@ -184,9 +192,8 @@ public class SecTect {
 //		testIDEA();
 		
 //		testRSA();
-		
-		System.out.println("1、周末去中信银行2、去超市买洗发水3、招商银行存款4、刷卡机5、租房6、不知道干嘛7、电影院看电影8、新街口买衣服9、财务管理".length());
-		
+
+
 
 	}
 

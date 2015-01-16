@@ -1,5 +1,8 @@
 package org.tools.util.encrypt;
 
+import org.bouncycastle.util.encoders.UrlBase64;
+
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +25,7 @@ public abstract class AESCoder {
 
 	public static final String KEY_ALGORITHM = "AES";
 	public static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
+	public static final String CHARSET_UTF8 = "UTF-8";
 
 	/**
 	 * 转换密钥
@@ -81,6 +85,46 @@ public abstract class AESCoder {
 		cipher.init(Cipher.ENCRYPT_MODE, k);
 		return cipher.doFinal(data);
 	}
+
+    /**
+     * 通过base64密钥AES解密base64加密串，是下面encrypt(String,String)的解密过程
+     * @param base64Data AES加密后，base64编码字符串
+     * @param base64Key base64编码的密钥
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws java.io.UnsupportedEncodingException
+     */
+    public static String descrypt(String base64Data, String base64Key)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+        byte[] key = Base64Coder.decode(base64Key.getBytes(CHARSET_UTF8));
+        byte[] data = UrlBase64.decode(base64Data.getBytes(CHARSET_UTF8));
+        return new String(descrypt(data, key), CHARSET_UTF8);
+    }
+
+    /**
+     * 通过base64密钥AES加密后，然后Base64编码成字符串返回
+     * @param data 要加密的明文字符串
+     * @param base64Key base64密钥
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws UnsupportedEncodingException
+     */
+    public static String encrypt(String data, String base64Key)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+        byte[] key = Base64Coder.decode(base64Key.getBytes(CHARSET_UTF8));
+        byte[] enBytes = encrypt(data.getBytes(CHARSET_UTF8), key);
+        return new String(UrlBase64.encode(enBytes), CHARSET_UTF8);
+    }
 
 	/**
 	 * 生成密钥
